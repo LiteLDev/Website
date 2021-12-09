@@ -20,11 +20,45 @@
     xsmall: [null, "480px"],
   });
 
-  // Play initial animations on page load.
+  // Play initial animations on page load and send request to Github API.
   $window.on("load", function () {
     window.setTimeout(function () {
       $body.removeClass("is-preload");
     }, 100);
+
+    fetch('https://api.github.com/repos/LiteLDev/LiteLoaderBDS')
+      .then(response => response.json())
+      .then(information => {
+        let IssuesCounter = $('#issues_count')
+        let StarCounter = $('#star_count')
+
+        let IssuesCounterLanguage = IssuesCounter.data('language')
+        let StarCounterLanguage = StarCounter.data('language')
+
+        switch (IssuesCounterLanguage) {
+          case "en":
+            IssuesCounter.text(`${information.open_issues} issues`)
+            break;
+          case "ru":
+            IssuesCounter.text(`${information.open_issues} ошибок(-ки)`)
+            break;
+          case "ch":
+            IssuesCounter.text(`${information.open_issues}期`)
+            break;
+        }
+
+        switch (StarCounterLanguage) {
+          case "en":
+            StarCounter.text(`${information.stargazers_count} stars`)
+            break;
+          case "ru":
+            StarCounter.text(`${information.stargazers_count} звезд(-ы)`)
+            break;
+          case "ch":
+            StarCounter.text(`${information.stargazers_count}颗星`)
+            break;
+        }
+      });
   });
 
   // Mobile?
